@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>grmd.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+
+  :root{
+    --bg:#0D0B08;
+    --surface:#17130E;
+    --surface-alt:#221C14;
+    --line:#332C21;
+    --ivory:#EDE6D8;
+    --taupe:#948A78;
+    --taupe-dim:#645C4E;
+    --gold:#B4915C;
+    --gold-bright:#D9BD8C;
+    --font-display:'Fraunces', serif;
+    --font-body:'Work Sans', sans-serif;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ivory);
+    font-family:var(--font-body);
+    -webkit-font-smoothing:antialiased;
+  }
+  img{max-width:100%;display:block;}
+  button{font-family:inherit;cursor:pointer;}
+  ::selection{background:var(--gold);color:#0D0B08;}
+
+  :focus-visible{
+    outline:2px solid var(--gold-bright);
+    outline-offset:3px;
+  }
+
+  .wrap{
+    max-width:1180px;
+    margin:0 auto;
+    padding:0 32px;
+  }
+
+  /* ---------- Topbar ---------- */
+  .topbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:28px 32px;
+  }
+  .logo-plaque{
+    display:inline-flex;
+    align-items:center;
+    background:var(--ivory);
+    color:#141210;
+    font-family:var(--font-display);
+    font-style:italic;
+    font-weight:500;
+    font-size:22px;
+    letter-spacing:0.02em;
+    padding:6px 16px 8px;
+  }
+  .topbar-note{
+    font-size:13px;
+    color:var(--taupe-dim);
+    letter-spacing:0.02em;
+  }
+
+  /* ---------- Hero ---------- */
+  .hero{
+    padding:56px 0 88px;
+    display:grid;
+    grid-template-columns:1.15fr 1fr;
+    gap:64px;
+    align-items:end;
+    opacity:0;
+    transform:translateY(14px);
+    animation:rise 700ms ease-out 80ms forwards;
+  }
+  @keyframes rise{
+    to{opacity:1;transform:translateY(0);}
+  }
+  .hero h1{
+    font-family:var(--font-display);
+    font-weight:300;
+    font-size:clamp(40px,5.4vw,68px);
+    line-height:1.04;
+    margin:0 0 22px;
+    max-width:11ch;
+  }
+  .hero h1 em{
+    font-style:italic;
+    font-weight:500;
+    color:var(--gold-bright);
+  }
+  .hero p{
+    font-size:16px;
+    line-height:1.6;
+    color:var(--taupe);
+    max-width:42ch;
+    margin:0;
+  }
+
+  .dropzone{
+    background:var(--surface);
+    border:1px solid var(--line);
+    padding:28px;
+    position:relative;
+    transition:border-color 160ms ease, background 160ms ease;
+  }
+  .dropzone.drag{
+    border-color:var(--gold);
+    background:var(--surface-alt);
+  }
+  .dropzone-inner{
+    border:1px dashed var(--line);
+    padding:36px 20px;
+    text-align:center;
+  }
+  .dropzone-inner p.title{
+    font-family:var(--font-display);
+    font-style:italic;
+    font-size:20px;
+    margin:0 0 8px;
+    color:var(--ivory);
+  }
+  .dropzone-inner p.sub{
+    font-size:13px;
+    color:var(--taupe-dim);
+    line-height:1.55;
+    margin:0 0 22px;
+    max-width:32ch;
+    margin-left:auto;
+    margin-right:auto;
+  }
+  .upload-btn{
+    background:transparent;
+    border:1px solid var(--gold);
+    color:var(--gold-bright);
+    font-size:13px;
+    letter-spacing:0.03em;
+    padding:11px 22px;
+    transition:background 160ms ease, color 160ms ease;
+  }
+  .upload-btn:hover{
+    background:var(--gold);
+    color:#141210;
+  }
+  .upload-btn + .upload-btn{margin-left:10px;}
+  .dz-count{
+    margin-top:16px;
+    font-size:12px;
+    color:var(--taupe-dim);
+  }
+  input[type=file]{display:none;}
+
+  /* ---------- Section shell ---------- */
+  section.panel{
+    padding:52px 0;
+    border-top:1px solid var(--line);
+  }
+  .panel-head{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    gap:20px;
+    margin-bottom:28px;
+    flex-wrap:wrap;
+  }
+  .panel-head h2{
+    font-family:var(--font-display);
+    font-weight:300;
+    font-style:italic;
+    font-size:28px;
+    margin:0;
+  }
+  .panel-head .count{
+    font-size:13px;
+    color:var(--taupe-dim);
+  }
+
+  /* ---------- Closet grid ---------- */
+  .closet-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(150px,1fr));
+    gap:18px;
+  }
+  .garment{
+    background:var(--surface);
+    border:1px solid var(--line);
+  }
+  .garment-img{
+    aspect-ratio:3/4;
+    overflow:hidden;
+    background:#0A0908;
+  }
+  .garment-img img{width:100%;height:100%;object-fit:cover;}
+  .garment-meta{
+    padding:10px 12px 14px;
+  }
+  .garment-meta select{
+    width:100%;
+    background:transparent;
+    border:none;
+    border-bottom:1px solid var(--line);
+    color:var(--ivory);
+    font-family:var(--font-body);
+    font-size:12.5px;
+    padding:4px 0 7px;
+    margin-bottom:9px;
+  }
+  .garment-meta select:focus{outline:none;border-bottom-color:var(--gold);}
+  .style-chips{
+    display:flex;
+    flex-wrap:wrap;
+    gap:5px;
+  }
+  .chip{
+    font-size:10.5px;
+    letter-spacing:0.02em;
+    color:var(--taupe);
+    border:1px solid var(--line);
+    padding:3px 8px;
+    background:transparent;
+    transition:all 120ms ease;
+  }
+  .chip.active{
+    color:#141210;
+    background:var(--gold-bright);
+    border-color:var(--gold-bright);
+  }
+
+  /* ---------- Style rail ---------- */
+  .rail{
+    display:flex;
+    flex-wrap:wrap;
+    gap:12px;
+    align-items:center;
+  }
+  .theme-btn{
+    background:transparent;
+    border:1px solid var(--line);
+    color:var(--ivory);
+    font-size:13.5px;
+    padding:12px 22px;
+    font-family:var(--font-body);
+    transition:border-color 160ms ease, color 160ms ease;
+  }
+  .theme-btn:hover{border-color:var(--gold);}
+  .theme-btn.active{
+    border-color:var(--gold-bright);
+    color:var(--gold-bright);
+  }
+  .surprise-btn{
+    background:var(--gold-bright);
+    color:#141210;
+    border:1px solid var(--gold-bright);
+    font-size:13.5px;
+    font-weight:500;
+    padding:12px 24px;
+    margin-left:auto;
+    transition:background 160ms ease, transform 160ms ease;
+  }
+  .surprise-btn:hover{background:var(--ivory);border-color:var(--ivory);}
+  .surprise-btn:active{transform:scale(0.98);}
+
+  /* ---------- Look plate ---------- */
+  .look-shell{
+    display:grid;
+    grid-template-columns:1fr 1.3fr;
+    gap:0;
+    border:1px solid var(--gold);
+    background:var(--surface);
+  }
+  .look-label{
+    padding:26px 26px 0;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+  }
+  .look-label .id{
+    font-size:12px;
+    letter-spacing:0.06em;
+    color:var(--taupe-dim);
+  }
+  .look-label .theme-name{
+    font-family:var(--font-display);
+    font-style:italic;
+    font-weight:500;
+    font-size:30px;
+    color:var(--gold-bright);
+    margin:10px 0 18px;
+  }
+  .spec-list{
+    list-style:none;
+    padding:0;
+    margin:0 0 24px;
+    font-size:13px;
+  }
+  .spec-list li{
+    display:flex;
+    justify-content:space-between;
+    padding:9px 0;
+    border-top:1px solid var(--line);
+    color:var(--taupe);
+  }
+  .spec-list li span.val{color:var(--ivory);}
+  .restyle-btn{
+    align-self:flex-start;
+    margin-bottom:26px;
+    background:transparent;
+    border:1px solid var(--line);
+    color:var(--ivory);
+    font-size:12.5px;
+    padding:10px 18px;
+  }
+  .restyle-btn:hover{border-color:var(--gold);}
+
+  .look-plate{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:1px;
+    background:var(--line);
+  }
+  .plate-slot{
+    background:var(--surface);
+    aspect-ratio:3/4;
+    position:relative;
+    overflow:hidden;
+  }
+  .plate-slot img{width:100%;height:100%;object-fit:cover;}
+  .plate-slot .tag{
+    position:absolute;
+    left:0;bottom:0;
+    background:rgba(13,11,8,0.82);
+    color:var(--gold-bright);
+    font-size:10.5px;
+    letter-spacing:0.03em;
+    padding:5px 9px;
+  }
+  .plate-slot.empty{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:var(--taupe-dim);
+    font-size:11px;
+    text-align:center;
+    padding:10px;
+  }
+
+  /* ---------- Empty / helper states ---------- */
+  .empty-note{
+    color:var(--taupe-dim);
+    font-size:13.5px;
+    line-height:1.6;
+    padding:20px 0;
+    max-width:52ch;
+  }
+  .hidden{display:none !important;}
+
+  footer{
+    padding:40px 32px 60px;
+    text-align:center;
+    color:var(--taupe-dim);
+    font-size:12px;
+  }
+
+  @media (max-width:820px){
+    .hero{grid-template-columns:1fr;gap:36px;}
+    .look-shell{grid-template-columns:1fr;}
+    .look-plate{grid-template-columns:repeat(3,1fr);}
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation:none !important; transition:none !important;}
+  }
+</style>
+</head>
+<body>
+
+  <header class="topbar">
+    <span class="logo-plaque">grmd.</span>
+    <span class="topbar-note">a private stylist for your own closet</span>
+  </header>
+
+  <div class="wrap">
+
+    <section class="hero">
+      <div>
+        <h1>Your wardrobe,<br><em>styled by you.</em></h1>
+        <p>Add photos of pieces you already own. Sort them once, then let grmd. put together a full look — by mood, or entirely by chance.</p>
+      </div>
+
+      <div class="dropzone" id="dropzone">
+        <div class="dropzone-inner">
+          <p class="title">Add your pieces</p>
+          <p class="sub">Drop image files here, or select them from your device. If your photos live in Google Drive, download the folder first — grmd. works entirely in your browser and never uploads anything anywhere.</p>
+          <button class="upload-btn" id="pickFiles">Select photos</button>
+          <button class="upload-btn" id="pickFolder">Select a folder</button>
+          <div class="dz-count" id="dzCount"></div>
+        </div>
+        <input type="file" id="fileInput" accept="image/*" multiple>
+        <input type="file" id="folderInput" accept="image/*" multiple webkitdirectory directory>
+      </div>
+    </section>
+
+    <section class="panel" id="closetPanel" style="display:none;">
+      <div class="panel-head">
+        <h2>Your closet</h2>
+        <span class="count" id="closetCount">0 pieces</span>
+      </div>
+      <p class="empty-note">Give each piece a category and, if you like, a mood or two. grmd. guesses from the filename first — check that it got it right.</p>
+      <div class="closet-grid" id="closetGrid"></div>
+    </section>
+
+    <section class="panel" id="stylePanel" style="display:none;">
+      <div class="panel-head">
+        <h2>Build a look</h2>
+      </div>
+      <div class="rail">
+        <button class="theme-btn" data-theme="Winter">Winter</button>
+        <button class="theme-btn" data-theme="Street">Street style</button>
+        <button class="theme-btn" data-theme="Casual">Casual</button>
+        <button class="theme-btn" data-theme="Formal">Formal</button>
+        <button class="theme-btn" data-theme="Summer">Summer</button>
+        <button class="surprise-btn" id="surpriseBtn">Surprise me</button>
+      </div>
+    </section>
+
+    <section class="panel" id="lookPanel" style="display:none;">
+      <div class="panel-head">
+        <h2>Today's look</h2>
+      </div>
+      <div id="lookOutput"></div>
+    </section>
+
+  </div>
+
+  <footer>grmd. — styled entirely in your browser. nothing you upload leaves this tab.</footer>
+
+<script>
+(function(){
+
+  const CATEGORIES = ["Top","Bottom","Outerwear","Shoes","Accessory"];
+  const STYLES = ["Winter","Street","Casual","Formal","Summer"];
+
+  const CATEGORY_KEYWORDS = {
+    "Top": ["shirt","tee","blouse","top","sweater","hoodie","knit","jumper"],
+    "Bottom": ["pant","jean","denim","skirt","trouser","short"],
+    "Outerwear": ["jacket","coat","blazer","parka","cardigan","puffer"],
+    "Shoes": ["shoe","sneaker","boot","heel","sandal","loafer","trainer"],
+    "Accessory": ["bag","scarf","hat","belt","jewel","sunglass","watch","cap"]
+  };
+  const STYLE_KEYWORDS = {
+    "Winter": ["winter","wool","puffer","boot","knit","coat"],
+    "Street": ["street","cargo","graphic","sneaker","denim","hoodie"],
+    "Casual": ["casual","tee","jean","everyday","sweater"],
+    "Formal": ["formal","suit","blazer","dress","heel","office"],
+    "Summer": ["summer","linen","short","sandal","tank","light"]
+  };
+
+  function guessCategory(name){
+    const n = name.toLowerCase();
+    for(const cat of CATEGORIES){
+      if(CATEGORY_KEYWORDS[cat].some(k => n.includes(k))) return cat;
+    }
+    return "Top";
+  }
+  function guessStyles(name){
+    const n = name.toLowerCase();
+    const found = STYLES.filter(s => STYLE_KEYWORDS[s].some(k => n.includes(k)));
+    return found.length ? found : ["Casual"];
+  }
+
+  let items = [];
+  let idCounter = 0;
+  let lookCounter = 0;
+  let activeTheme = null;
+
+  const dropzone = document.getElementById('dropzone');
+  const fileInput = document.getElementById('fileInput');
+  const folderInput = document.getElementById('folderInput');
+  const dzCount = document.getElementById('dzCount');
+  const closetPanel = document.getElementById('closetPanel');
+  const closetGrid = document.getElementById('closetGrid');
+  const closetCount = document.getElementById('closetCount');
+  const stylePanel = document.getElementById('stylePanel');
+  const lookPanel = document.getElementById('lookPanel');
+  const lookOutput = document.getElementById('lookOutput');
+
+  document.getElementById('pickFiles').addEventListener('click', () => fileInput.click());
+  document.getElementById('pickFolder').addEventListener('click', () => folderInput.click());
+  fileInput.addEventListener('change', e => handleFiles(e.target.files));
+  folderInput.addEventListener('change', e => handleFiles(e.target.files));
+
+  ['dragenter','dragover'].forEach(evt => {
+    dropzone.addEventListener(evt, e => { e.preventDefault(); dropzone.classList.add('drag'); });
+  });
+  ['dragleave','drop'].forEach(evt => {
+    dropzone.addEventListener(evt, e => { e.preventDefault(); dropzone.classList.remove('drag'); });
+  });
+  dropzone.addEventListener('drop', e => {
+    if(e.dataTransfer && e.dataTransfer.files) handleFiles(e.dataTransfer.files);
+  });
+
+  function handleFiles(fileList){
+    const files = Array.from(fileList).filter(f => f.type.startsWith('image/'));
+    if(!files.length) return;
+    files.forEach(f => {
+      const id = 'g' + (idCounter++);
+      const src = URL.createObjectURL(f);
+      items.push({
+        id, src,
+        category: guessCategory(f.name),
+        styles: new Set(guessStyles(f.name))
+      });
+    });
+    dzCount.textContent = items.length + (items.length === 1 ? ' piece added' : ' pieces added');
+    renderCloset();
+    closetPanel.style.display = '';
+    stylePanel.style.display = '';
+  }
+
+  function renderCloset(){
+    closetCount.textContent = items.length + (items.length === 1 ? ' piece' : ' pieces');
+    closetGrid.innerHTML = '';
+    items.forEach(item => {
+      const card = document.createElement('div');
+      card.className = 'garment';
+
+      const imgWrap = document.createElement('div');
+      imgWrap.className = 'garment-img';
+      const img = document.createElement('img');
+      img.src = item.src;
+      img.alt = '';
+      imgWrap.appendChild(img);
+
+      const meta = document.createElement('div');
+      meta.className = 'garment-meta';
+
+      const select = document.createElement('select');
+      select.setAttribute('aria-label','Category');
+      CATEGORIES.forEach(cat => {
+        const opt = document.createElement('option');
+        opt.value = cat;
+        opt.textContent = cat;
+        if(cat === item.category) opt.selected = true;
+        select.appendChild(opt);
+      });
+      select.addEventListener('change', () => { item.category = select.value; });
+
+      const chips = document.createElement('div');
+      chips.className = 'style-chips';
+      STYLES.forEach(style => {
+        const chip = document.createElement('button');
+        chip.type = 'button';
+        chip.className = 'chip' + (item.styles.has(style) ? ' active' : '');
+        chip.textContent = style;
+        chip.addEventListener('click', () => {
+          if(item.styles.has(style)){ item.styles.delete(style); }
+          else { item.styles.add(style); }
+          chip.classList.toggle('active');
+        });
+        chips.appendChild(chip);
+      });
+
+      meta.appendChild(select);
+      meta.appendChild(chips);
+      card.appendChild(imgWrap);
+      card.appendChild(meta);
+      closetGrid.appendChild(card);
+    });
+  }
+
+  function pickRandom(arr){
+    return arr[Math.floor(Math.random() * arr.length)];
+  }
+
+  function buildLook(theme){
+    const pool = theme ? items.filter(i => i.styles.has(theme)) : items;
+    const byCat = {};
+    CATEGORIES.forEach(c => byCat[c] = pool.filter(i => i.category === c));
+
+    if(!byCat["Top"].length || !byCat["Bottom"].length || !byCat["Shoes"].length){
+      lookOutput.innerHTML = '';
+      const note = document.createElement('p');
+      note.className = 'empty-note';
+      note.textContent = theme
+        ? `Not quite enough tagged "${theme}" yet — you need at least a top, a bottom, and shoes in that mood. Tag a few more pieces above, or try Surprise me.`
+        : 'Add at least a top, a bottom, and shoes to your closet to build a look.';
+      lookOutput.appendChild(note);
+      lookPanel.style.display = '';
+      return;
+    }
+
+    const chosen = {
+      "Top": pickRandom(byCat["Top"]),
+      "Bottom": pickRandom(byCat["Bottom"]),
+      "Shoes": pickRandom(byCat["Shoes"]),
+      "Outerwear": (byCat["Outerwear"].length && Math.random() > 0.4) ? pickRandom(byCat["Outerwear"]) : null,
+      "Accessory": (byCat["Accessory"].length && Math.random() > 0.35) ? pickRandom(byCat["Accessory"]) : null
+    };
+
+    lookCounter++;
+    const shell = document.createElement('div');
+    shell.className = 'look-shell';
+
+    const label = document.createElement('div');
+    label.className = 'look-label';
+    label.innerHTML = `
+      <div>
+        <div class="id">Look ${String(lookCounter).padStart(3,'0')}</div>
+        <div class="theme-name">${theme ? theme : 'Surprise'}</div>
+        <ul class="spec-list">
+          ${CATEGORIES.map(c => `<li>${c}<span class="val">${chosen[c] ? '✓' : '—'}</span></li>`).join('')}
+        </ul>
+      </div>
+      <button class="restyle-btn" id="restyleBtn">Restyle this look</button>
+    `;
+
+    const plate = document.createElement('div');
+    plate.className = 'look-plate';
+    ["Top","Outerwear","Bottom","Accessory","Shoes"].forEach(c => {
+      const slot = document.createElement('div');
+      if(chosen[c]){
+        slot.className = 'plate-slot';
+        slot.innerHTML = `<img src="${chosen[c].src}" alt=""><span class="tag">${c}</span>`;
+      } else {
+        slot.className = 'plate-slot empty';
+        slot.textContent = c;
+      }
+      plate.appendChild(slot);
+    });
+
+    shell.appendChild(label);
+    shell.appendChild(plate);
+    lookOutput.innerHTML = '';
+    lookOutput.appendChild(shell);
+    lookPanel.style.display = '';
+
+    document.getElementById('restyleBtn').addEventListener('click', () => buildLook(theme));
+    lookPanel.scrollIntoView({behavior:'smooth', block:'start'});
+  }
+
+  document.querySelectorAll('.theme-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeTheme = btn.dataset.theme;
+      buildLook(activeTheme);
+    });
+  });
+
+  document.getElementById('surpriseBtn').addEventListener('click', () => {
+    document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
+    activeTheme = null;
+    buildLook(null);
+  });
+
+})();
+</script>
+
+</body>
+</html>
